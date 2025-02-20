@@ -1,11 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фитнес тренеры</title>
+    <!-- Подключение Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Подключение дополнительных стилей -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card-title {
+            color: #333;
+        }
+        .card-text {
+            color: #666;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .btn-outline-primary {
+            color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-outline-primary:hover {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-	<H1>СОСАЛ?</H1>
+    <div class="container mt-5">
+        <!-- Поисковая строка -->
+        <form action="/search" method="POST" class="mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Поиск исполнителя услуг" name="query">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Поиск</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Кнопки фильтрации услуг -->
+        <div class="btn-group mb-4">
+            <form action="/sort" method="POST">
+                <button class="btn btn-outline-primary" name="sort_by" value="price_asc">По цене (возр.)</button>
+                <button class="btn btn-outline-primary" name="sort_by" value="price_desc">По цене (убыв.)</button>
+                <button class="btn btn-outline-primary" name="sort_by" value="name_asc">По имени (А-Я)</button>
+                <button class="btn btn-outline-primary" name="sort_by" value="name_desc">По имени (Я-А)</button>
+                <button class="btn btn-outline-primary" name="sort_by" value="default">Сбросить сортировку</button>
+            </form>
+        </div>
+
+        <!-- Блок с услугами -->
+        <div class="row">
+            <!-- Пример одной услуги -->
+            {% for service in services %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ service.name }}</h5>
+                        <p class="card-text">Цена: {{service.price}}</p>
+                        <p class="card-text">{{ service.description }}</p>
+                            <form action="/signup" method="POST">
+                                <button type="submit" class="btn btn-primary">Записаться на занятие</button>
+                            </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Подключение Bootstrap JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

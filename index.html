@@ -1,15 +1,249 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Дипломный проект</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мини-приложение ЭЦП</title>
+    <style>
+        /* Общие стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f7f7f7;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        label.file-label {
+            cursor: pointer;
+            display: inline-block;
+            background-color: #0088cc;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+        }
+
+        label.file-label:hover {
+            background-color: #0073b1;
+            box-shadow: 0 4px 12px rgba(0, 136, 204, 0.25);
+        }
+
+        button {
+            background-color: #0088cc;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #0073b1;
+            box-shadow: 0 4px 12px rgba(0, 136, 204, 0.25);
+        }
+
+        .loader {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 48px;
+            height: 48px;
+            border: 5px solid #ccc;
+            border-top-color: #0088cc;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader.active {
+            display: block;
+        }
+
+        .result {
+            font-size: 18px;
+            color: #444;
+            margin-top: 20px;
+        }
+
+        .menu-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #0088cc;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 50%;
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 12px rgba(0, 136, 204, 0.25);
+        }
+
+        .menu-button:hover {
+            background-color: #0073b1;
+            box-shadow: 0 8px 16px rgba(0, 136, 204, 0.35);
+        }
+
+        .menu {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: scale(0);
+            transition: transform 0.3s ease-in-out;
+            z-index: 9999;
+        }
+
+        .menu.active {
+            transform: scale(1);
+        }
+
+        .menu-item {
+            display: block;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #555;
+            cursor: pointer;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .menu-item:hover {
+            color: #0088cc;
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .icon {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .menu-icon {
+            font-size: 32px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .main-container {
+                width: 90%;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Загрузка файла для хеширования и подписания</h1>
-  <input type="file" id="fileInput">
-  <button onclick="processFile()">Обработать файл</button>
-  <div id="result"></div>
+    <!-- Основная часть -->
+    <div class="main-container">
+        <h1>Электронная подпись (ЭЦП)</h1>
+        <p>Выберите документ для хэширования.</p>
+        <label for="document-input" class="file-label">Выбрать файл</label>
+        <input type="file" id="document-input" accept=".pdf,.docx,.txt">
+        <br><br>
+        <button id="calculate-hash">Вычислить хэш</button>
+        <div class="loader"></div>
+        <div class="result"></div>
+    </div>
 
-  <script src="app.js"></script>
+    <!-- Меню -->
+    <div class="menu">
+        <span class="close-menu">×</span>
+        <a href="#" class="menu-item"><i class="icon fas fa-info-circle"></i>О приложении</a>
+        <a href="#" class="menu-item"><i class="icon fas fa-cog"></i>Настройки</a>
+        <a href="#" class="menu-item"><i class="icon fas fa-question-circle"></i>Помощь</a>
+    </div>
+
+    <!-- Кнопка вызова меню -->
+    <button class="menu-button menu-icon fas fa-bars"></button>
+
+    <!-- Скрипты -->
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit-code.js" crossorigin="anonymous"></script>
+    <script>
+        // Функция для получения хэш-значения
+        function calculateHash() {
+            const loader = document.querySelector('.loader');
+            const resultContainer = document.querySelector('.result');
+            const fileInput = document.getElementById('document-input');
+            
+            if (fileInput.files.length === 0) {
+                alert('Пожалуйста, выберите файл.');
+                return;
+            }
+
+            // Здесь должна быть логика отправки файла на сервер и получения хэш-значения
+            // В данном примере симуляция процесса
+            loader.classList.add('active');
+            setTimeout(() => {
+                loader.classList.remove('active');
+                resultContainer.innerHTML = '<strong>Хэш-значение:</strong> abcd1234';
+            }, 2000);
+        }
+
+        // События
+        document.getElementById('calculate-hash').addEventListener('click', calculateHash);
+        document.querySelectorAll('.menu-item').forEach(item => item.addEventListener('click', () => {
+            document.querySelector('.menu').classList.toggle('active');
+        }));
+        document.querySelector('.menu-button').addEventListener('click', () => {
+            document.querySelector('.menu').classList.toggle('active');
+        });
+        document.querySelector('.close-menu').addEventListener('click', () => {
+            document.querySelector('.menu').classList.remove('active');
+        });
+    </script>
 </body>
 </html>

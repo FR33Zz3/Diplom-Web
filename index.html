@@ -2,44 +2,13 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Электронная подпись файла</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Загрузка файла</title>
 </head>
 <body>
-    <div class="container">
-        <!-- Блок для выбора файла -->
-        <div id="file-select-container" class="step">
-            <h2>Шаг 1: Выберите файл</h2>
-            <input type="file" id="file-input" accept=".pdf,.docx,.txt">
-            <button id="select-file-button">Выбрать файл</button>
-        </div>
-
-        <!-- Блок для процесса подписания -->
-        <div id="signing-progress-container" class="step hidden">
-            <h2>Шаг 2: Подпись файла</h2>
-            <progress id="signing-progressbar" value="0" max="100"></progress>
-            <p id="signing-status-text">Подписывание файла...</p>
-            <button id="cancel-signing-button">Отменить</button>
-        </div>
-
-        <!-- Блок для отправки подписанного файла -->
-        <div id="send-file-container" class="step hidden">
-            <h2>Шаг 3: Отправьте подписанный файл</h2>
-            <label for="recipient-input">Получатель:</label>
-            <input type="text" id="recipient-input" placeholder="Имя или номер телефона">
-            <button id="send-file-button">Отправить подписанный файл</button>
-        </div>
-
-        <!-- Блок завершения -->
-        <div id="completion-container" class="step hidden">
-            <h2>Завершение</h2>
-            <p>Файл успешно подписан и отправлен!</p>
-            <button id="return-to-start-button">Вернуться к выбору файла</button>
-            <button id="close-app-button">Закрыть программу</button>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+    <h1>Загрузите файл для подписания</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Отправить</button>
+    </form>
 </body>
 </html>

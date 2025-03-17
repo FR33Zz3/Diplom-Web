@@ -23,6 +23,8 @@
         <label class="custom-file-label" for="fileInput">Выберите файл...</label>
       </div>
       <button type="button" class="btn btn-primary" onclick="processFile()">Обработать файл</button>
+      <!-- Добавили кнопку для отправки -->
+      <button type="button" class="btn btn-success mt-2" onclick="sendSignedDocument()">Отправить подписанный файл</button>
     </form>
     <div id="result" class="mt-3"></div>
   </div>
@@ -41,8 +43,20 @@
         return;
       }
       
-      const hash = await hashFile(file); // Функция из app.js
-      document.getElementById('result').innerHTML = `<p>Файл: ${file.name}</p><p>Хэш: ${hash}</p>`;
+      const hash = await hashFile(file); // Получаем хэш файла
+      const signature = await signHash(hash); // Подписываем хэш
+
+      document.getElementById('result').innerHTML = `
+        <p>Файл: ${file.name}</p>
+        <p>Хэш: ${hash}</p>
+        <p>Подпись: ${signature}</p>
+      `;
+    }
+
+    async function sendSignedDocument() {
+      const signedData = { hash, signature };
+      // Вызвать функцию отправки документа через Telegram API
+      // sendSignedDocumentToTelegram(signedData);
     }
 
     document.getElementById('fileInput').addEventListener('change', function() {

@@ -1,0 +1,66 @@
+/* Основные стили */
+* {
+	box-sizing: border-box;
+	font-family: Arial, sans-serif;
+}
+
+body {
+	margin: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background-color: #f0f0f0;
+}
+
+.container {
+	width: 400px;
+	padding: 20px;
+	background-color: white;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.step {
+	display: none;
+}
+
+.step.active {
+	display: block;
+}
+
+.hidden {
+	display: none;
+}
+
+/* Стилизация кнопок */
+button {
+	padding: 10px 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	background-color: #007bff;
+	color: white;
+	transition: background-color 0.3s ease;
+}
+
+button:hover {
+	background-color: #0056b3;
+}
+
+button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* Стилизация прогресса */
+progress {
+	width: 100%;
+	height: 20px;
+	margin-top: 10px;
+}
+
+#signing-status-text {
+	text-align: center;
+	margin-top: 10px;
+}
